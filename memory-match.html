@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Memory Match</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 10px;
+      margin: 20px auto;
+    }
+    .card {
+      width: 80px;
+      height: 80px;
+      background: #ccc;
+      font-size: 2em;
+      text-align: center;
+      line-height: 80px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    body.night .card {
+      background: #555;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Memory Match</h2>
+    <p id="status"></p>
+    <button onclick="startGame()">Start</button>
+    <div id="grid"></div>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <script>
+    const emojiSet = ["🏰","🐉", "👑","⚔️","🗡️","🏹","🤴","💂" ]
+    let symbols = [...emojiSet, ...emojiSet]; // 8 pairs
+    let flipped = [];
+    let matched = [];
+    let matchWins = 0;
+    let winThreshold = parseInt(localStorage.getItem("winThreshold")) || 5;
+
+    function startGame() {
+      document.getElementById("status").textContent = `Match ${matchWins}/${winThreshold}`;
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      flipped = [];
+      matched = [];
+      const shuffled = symbols.sort(() => 0.5 - Math.random());
+      shuffled.forEach((symbol, i) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.symbol = symbol;
+        card.onclick = () => flipCard(card);
+        grid.appendChild(card);
+      });
+    }
+
+    function flipCard(card) {
+      if (flipped.length < 2 && !card.textContent && !matched.includes(card)) {
+        card.textContent = card.dataset.symbol;
+        flipped.push(card);
+        if (flipped.length === 2) {
+          setTimeout(() => {
+            if (flipped[0].dataset.symbol === flipped[1].dataset.symbol) {
+              matched.push(...flipped);
+              if (matched.length === symbols.length) {
+                matchWins++;
+                alert("You matched all cards!");
+                if (matchWins >= winThreshold) {
+                  alert("You won the match!");
+                  matchWins = 0;
+                }
+                startGame();
+              }
+            } else {
+              flipped.forEach(c => c.textContent = "");
+            }
+            flipped = [];
+          }, 800);
+        }
+      }
+    }
+
+    function goBack() {
+      window.location.href = "games.html";
+    }
+
+    if (localStorage.getItem("nightMode") === "true") {
+      document.body.classList.add("night");
+    }
+  </script>
+</body>
+</html>
+<script>
+
+    function flipCard(card) {
+      if (flipped.length < 2 && !card.textContent && !matched.includes(card)) {
+        card.textContent = card.dataset.symbol;
+        flipped.push(card);
+        if (flipped.length === 2) {
+          setTimeout(() => {
+            if (flipped[0].dataset.symbol === flipped[1].dataset.symbol) {
+              matched.push(...flipped);
+              if (matched.length === symbols.length) {
+                matchWins++;
+                alert("You matched all cards!");
+                if (matchWins >= winThreshold) {
+                  alert("You won the match!");
+                  matchWins = 0;
+                }
+                startGame();
+              }
+            } else {
+              flipped.forEach(c => c.textContent = "");
+            }
+            flipped = [];
+          }, 800);
+        }
+      }
+    }
+
+    function goBack() {
+      window.location.href = "games.html";
+    }
+
+    if (localStorage.getItem("nightMode") === "true") {
+      document.body.classList.add("night");
+    }
+  </script>
+</body>
+</html>

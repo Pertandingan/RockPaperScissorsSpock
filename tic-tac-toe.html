@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      margin: 20px auto;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2em;
+      background: #fff;
+      border: 2px solid #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    body.night .cell {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tic Tac Toe</h2>
+    <p id="status"></p>
+    <button onclick="startGame()">Start</button>
+    <div id="board"></div>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <script>
+    let boardState = Array(9).fill("");
+    let winsPlayer = 0;
+    let winsRobot = 0;
+    let winThreshold = parseInt(localStorage.getItem("winThreshold")) || 5;
+
+    function startGame() {
+      boardState = Array(9).fill("");
+      document.getElementById("status").textContent = `First to ${winThreshold} wins!`;
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const board = document.getElementById("board");
+      board.innerHTML = "";
+      boardState.forEach((val, i) => {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.textContent = val;
+        if (!val) {
+          cell.onclick = () => handlePlayerMove(i);
+        }
+        board.appendChild(cell);
+      });
+    }
+
+    function handlePlayerMove(i) {
+      if (boardState[i]) return;
+      boardState[i] = "X";
+      renderBoard();
+      if (checkWinner("X")) {
+        winsPlayer++;
+        alert("You win this round!");
+        checkMatchEnd("Player");
+        return startGame();
+      }
+      if (boardState.every(cell => cell)) {
+        alert("It's a draw!");
+        return startGame();
+      }
+      setTimeout(handleRobotMove, 500);
+    }
+
+    function handleRobotMove() {
+      const empty = boardState.map((val, i) => val === "" ? i : null).filter(i => i !== null);
+      if (empty.length === 0) return;
+      const move = empty[Math.floor(Math.random() * empty.length)];
+      boardState[move] = "O";
+      renderBoard();
+      if (checkWinner("O")) {
+        winsRobot++;
+        alert("Robot wins this round!");
+        checkMatchEnd("Robot");
+        return startGame();
+      }
+      if (boardState.every(cell => cell)) {
+        alert("It's a draw!");
+        return startGame();
+      }
+    }
+
+    function checkWinner(p) {
+      const combos = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return combos.some(c => c.every(i => boardState[i] === p));
+    }
+
+    function checkMatchEnd(winner) {
+      if ((winner === "Player" && winsPlayer >= winThreshold) ||
+          (winner === "Robot" && winsRobot >= winThreshold)) {
+        alert(`${winner} wins the match!`);
+        winsPlayer = 0;
+        winsRobot = 0;
+      }
+    }
+
+    function goBack() {
+      window.location.href = "games.html";
+    }
+
+    if (localStorage.getItem("nightMode") === "true") {
+      document.body.classList.add("night");
+    }
+  </script>
+</body>
+</html>

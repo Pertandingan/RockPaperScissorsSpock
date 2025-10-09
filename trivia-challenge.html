@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trivia Challenge</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Trivia Challenge</h2>
+    <p id="status"></p>
+    <button onclick="startGame()">Start</button>
+    <button onclick="toggleFullscreen()">Fullscreen</button>
+    <div id="question"></div>
+    <div id="answers"></div>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "Capital of France?", a: ["Paris", "Rome", "Berlin", "Madrid"], correct: 0 },
+      { q: "Red Planet?", a: ["Earth", "Mars", "Jupiter", "Venus"], correct: 1 },
+      { q: "Largest ocean?", a: ["Atlantic", "Indian", "Pacific", "Arctic"], correct: 2 },
+      { q: "2 + 2 = ?", a: ["3", "4", "5", "6"], correct: 1 }
+    ];
+    let current = 0;
+    let score = 0;
+    let winThreshold = parseInt(localStorage.getItem("winThreshold")) || 5;
+
+    function startGame() {
+      score = 0;
+      current = 0;
+      document.getElementById("status").textContent = `First to ${winThreshold} correct answers wins!`;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[current];
+      document.getElementById("question").textContent = q.q;
+      const answers = document.getElementById("answers");
+      answers.innerHTML = "";
+      q.a.forEach((text, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = text;
+        btn.onclick = () => {
+          if (i === q.correct) {
+            score++;
+            alert("Correct!");
+            if (score >= winThreshold) {
+              alert("You won the match!");
+              return goBack();
+            }
+          } else {
+            alert("Wrong!");
+          }
+          current = (current + 1) % questions.length;
+          showQuestion();
+        };
+        answers.appendChild(btn);
+      });
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+
+    function goBack() {
+      window.location.href = "games.html";
+    }
+
+    if (localStorage.getItem("nightMode") === "true") {
+      document.body.classList.add("night");
+    }
+  </script>
+</body>
+</html>

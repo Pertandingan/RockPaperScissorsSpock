@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Other Games</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>🎮 Other Games</h2>
+    <p>Explore more fun games below:</p>
+
+    <div class="game-links">
+      <div class="game-card">
+        <h3>Tic Tac Toe</h3>
+        <button onclick="launchGame('tic-tac-toe.html')">Start</button>
+      </div>
+      <div class="game-card">
+        <h3>Memory Match</h3>
+        <button onclick="launchGame('memory-match.html')">Start</button>
+      </div>
+      <div class="game-card">
+        <h3>Trivia Challenge</h3>
+        <button onclick="launchGame('trivia-challenge.html')">Start</button>
+      </div>
+      <div class="game-card">
+        <h3>Ping Pong</h3>
+        <button onclick="launchGame('ping-pong.html')">Start</button>
+      </div>
+      <div class="game-card">
+        <h3>Snake</h3>
+        <button onclick="launchGame('snake.html')">Start</button>
+      </div>
+    </div>
+
+    <br>
+    <button onclick="goBack()">⬅️ Back to Main Menu</button>
+  </div>
+
+  <script>
+    function launchGame(url) {
+      window.open(url, "_blank");
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+
+    if (localStorage.getItem("nightMode") === "true") {
+      document.body.classList.add("night");
+    }
+  </script>
+</body>
+</html>

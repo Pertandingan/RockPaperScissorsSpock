@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Ping Pong with AI</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+  }
+  .game-container {
+    margin: 20px auto;
+    width: 600px;
+    text-align: center;
+  }
+  canvas {
+    background: #222;
+    display: block;
+    margin: 20px auto;
+    border: 2px solid #555;
+  }
+  button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+</style>
+</head>
+<body>
+<div class="game-container">
+  <h2>Ping Pong with AI</h2>
+  <p id="score">Player: 0 | AI: 0</p>
+  <button onclick="startGame()">Start</button>
+  <button onclick="goBack()">Back</button>
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let playerScore = 0;
+let aiScore = 0;
+
+let ball = { x: 300, y: 200, radius: 10, speed: 4, dx: 4, dy: 4 };
+let playerPaddle = { x: 10, y: 150, width: 10, height: 80 };
+let aiPaddle = { x: 580, y: 150, width: 10, height: 80 };
+
+let gameInterval;
+let ballSpeedIncrement = 0.2; // Speed increases each hit
+let aiMissChance = 0.05; // 5% chance to miss
+
+function draw() {
+  ctx.clearRect(0, 0, 600, 400);
+  // Draw ball
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Draw player paddle
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
+
+  // Draw AI paddle
+  ctx.fillStyle = 'red';
+  ctx.fillRect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height);
+}
+
+function update() {
+  // Move ball
+  ball.x += ball.dx;
+  ball.y += ball.dy;
+
+  // Wall collision (top/bottom)
+  if (ball.y + ball.radius > 400 || ball.y - ball.radius < 0) {
+    ball.dy = -ball.dy;
+  }
+
+  // Player paddle collision
+  if (
+    ball.x - ball.radius < playerPaddle.x + playerPaddle.width &&
+    ball.y > playerPaddle.y &&
+    ball.y < playerPaddle.y + playerPaddle.height
+  ) {
+    ball.dx = -ball.dx + ballSpeedIncrement; // Increase speed
+    ball.x = playerPaddle.x + playerPaddle.width + ball.radius; // prevent sticking
+    // Increase ball speed slightly
+    if (ball.dx > 0) ball.dx += ballSpeedIncrement;
+    else ball.dx -= ballSpeedIncrement;
+    // Random chance to miss (simulate missed hit)
+    if (Math.random() < aiMissChance) {
+      // AI misses, do nothing, ball continues
+    }
+  }
+
+  // AI paddle collision
+  if (
+    ball.x + ball.radius > aiPaddle.x &&
+    ball.y > aiPaddle.y &&
+    ball.y < aiPaddle.y + aiPaddle.height
+  ) {
+    ball.dx = -ball.dx - ballSpeedIncrement; // Increase speed
+    ball.x = aiPaddle.x - ball.radius; // prevent sticking
+    if (ball.dx > 0) ball.dx += ballSpeedIncrement;
+    else ball.dx -= ballSpeedIncrement;
+    // Small chance AI misses
+    if (Math.random() < aiMissChance) {
+      // AI misses, do nothing
+    }
+  }
+
+  // Left or right goal
+  if (ball.x - ball.radius < 0) {
+    // AI scores
+    aiScore++;
+    resetBall();
+  } else if (ball.x + ball.radius > 600) {
+    // Player scores
+    playerScore++;
+    resetBall();
+  }
+
+  // Move AI paddle (simple AI)
+  // Slight randomness to miss
+  const targetY = ball.y - aiPaddle.height / 2 + (Math.random() - 0.5) * 20;
+  if (aiPaddle.y + aiPaddle.height / 2 < targetY) {
+    aiPaddle.y += 3;
+  } else if (aiPaddle.y + aiPaddle.height / 2 > targetY) {
+    aiPaddle.y -= 3;
+  }
+  // Keep AI paddle in bounds
+  if (aiPaddle.y < 0) aiPaddle.y = 0;
+  if (aiPaddle.y + aiPaddle.height > 400) aiPaddle.y = 400 - aiPaddle.height;
+
+  // Draw everything
+  draw();
+
+  // Update scores
+  document.getElementById('score').textContent = `Player: ${playerScore} | AI: ${aiScore}`;
+}
+
+function resetBall() {
+  ball.x = 300;
+  ball.y = 200;
+  ball.dx = 4 * (Math.random() < 0.5 ? 1 : -1);
+  ball.dy = 4 * (Math.random() < 0.5 ? 1 : -1);
+  ball.speed = 4; // reset speed
+  // optional: reduce speed after a point
+}
+
+function startGame() {
+  if (gameInterval) clearInterval(gameInterval);
+  playerScore = 0;
+  aiScore = 0;
+  document.getElementById('score').textContent = `Player: 0 | AI: 0`;
+  ball.x = 300;
+  ball.y = 200;
+  ball.dx = 4 * (Math.random() < 0.5 ? 1 : -1);
+  ball.dy = 4 * (Math.random() < 0.5 ? 1 : -1);
+  ball.speed = 4;
+  gameInterval = setInterval(update, 20);
+}
+
+// Player controls
+document.addEventListener('keydown', e => {
+  const step = 20;
+  if (e.key === 'ArrowUp') {
+    playerPaddle.y -= step;
+    if (playerPaddle.y < 0) playerPaddle.y = 0;
+  } else if (e.key === 'ArrowDown') {
+    playerPaddle.y += step;
+    if (playerPaddle.y + playerPaddle.height > 400) playerPaddle.y = 400 - playerPaddle.height;
+  }
+});
+
+function goBack() {
+  window.location.href = 'games.html';
+}
+
+// Start game on load
+startGame();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPSLS Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="auth-section">
+      <h2>Login / Signup</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button onclick="signup()">Signup</button>
+    </div>
+
+    <div id="menu-section" style="display:none;">
+      <h2>Welcome, <span id="user-display"></span></h2>
+      <button onclick="startGame()">Start Game</button>
+      <button onclick="showRules()">Rules</button>
+      <button onclick="openSettings()">Settings</button>
+      <button onclick="showLeaderboard()">Leaderboard</button>
+      <button onclick="logout()">Logout</button>
+      <button onclick="location.href='games.html'">Other Games</button>
+    </div>
+
+    <div id="game-section" style="display:none;"></div>
+    <div id="rules-section" style="display:none;"></div>
+    <div id="settings-section" style="display:none;"></div>
+    <div id="leaderboard-section" style="display:none;"></div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="game.js"></script>
+  <script src="rules.js"></script>
+  <script src="settings.js"></script>
+  <script src="leaderboard.js"></script>
+  <script>
+  document.addEventListener("keydown", function (e) {
+    if (e.key.toLowerCase() === "[") {
+      window.open("https://pertandingan.github.io/Pertandingan/", "_blank");
+    }
+    if (e.key.toLowerCase() === "-") {
+      window.open("https://pertandingan.github.io/ZenthTranslate/", "_blank");
+    }
+  });
+</script>
+
+</body>
+</html>
