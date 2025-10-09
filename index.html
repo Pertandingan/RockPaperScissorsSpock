@@ -1,52 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RPSLS Game</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RPSLS Game</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <div id="auth-section">
-      <h2>Login / Signup</h2>
-      <input type="text" id="username" placeholder="Username" />
-      <input type="password" id="password" placeholder="Password" />
-      <button onclick="login()">Login</button>
-      <button onclick="signup()">Signup</button>
+    <div class="container">
+        <div id="auth-section">
+            <h2>Login / Signup</h2>
+            <input type="text" id="username" placeholder="Username" />
+            <input type="password" id="password" placeholder="Password" />
+            <button onclick="login()">Login</button>
+            <button onclick="signup()">Signup</button>
+        </div>
+
+        <div id="menu-section" style="display:none;">
+            <h2>Welcome, <span id="user-display"></span></h2>
+            <button onclick="startGame()">Start Game</button>
+            <button onclick="showRules()">Rules</button>
+            <button onclick="openSettings()">Settings</button>
+            <button onclick="showLeaderboard()">Leaderboard</button>
+            <button onclick="logout()">Logout</button>
+            <button onclick="location.href='games.html'">Other Games</button>
+        </div>
+
+        <div id="game-section" style="display:none;"></div>
+        <div id="rules-section" style="display:none;"></div>
+        <div id="settings-section" style="display:none;"></div>
+        <div id="leaderboard-section" style="display:none;"></div>
     </div>
 
-    <div id="menu-section" style="display:none;">
-      <h2>Welcome, <span id="user-display"></span></h2>
-      <button onclick="startGame()">Start Game</button>
-      <button onclick="showRules()">Rules</button>
-      <button onclick="openSettings()">Settings</button>
-      <button onclick="showLeaderboard()">Leaderboard</button>
-      <button onclick="logout()">Logout</button>
-      <button onclick="location.href='games.html'">Other Games</button>
-    </div>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <div id="game-section" style="display:none;"></div>
-    <div id="rules-section" style="display:none;"></div>
-    <div id="settings-section" style="display:none;"></div>
-    <div id="leaderboard-section" style="display:none;"></div>
-  </div>
+    <!-- Firebase config & initialization -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCB8323UvpaW1X5HxpBb9VwBdrTHZ4m9-Q",
+            authDomain: "rpsls-game-cd6cb.firebaseapp.com",
+            projectId: "rpsls-game-cd6cb",
+            storageBucket: "rpsls-game-cd6cb.firebasestorage.app",
+            messagingSenderId: "452822861593",
+            appId: "1:452822861593:web:4ab584a43033efee16e788",
+            measurementId: "G-V9T2EGX280"
+        };
 
-  <script src="auth.js"></script>
-  <script src="game.js"></script>
-  <script src="rules.js"></script>
-  <script src="settings.js"></script>
-  <script src="leaderboard.js"></script>
-  <script>
-  document.addEventListener("keydown", function (e) {
-    if (e.key.toLowerCase() === "[") {
-      window.open("https://pertandingan.github.io/Pertandingan/", "_blank");
-    }
-    if (e.key.toLowerCase() === "-") {
-      window.open("https://pertandingan.github.io/ZenthTranslate/", "_blank");
-    }
-  });
-</script>
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 
+    <!-- Your scripts -->
+    <script src="auth.js"></script>
+    <script src="game.js"></script>
+    <script src="rules.js"></script>
+    <script src="settings.js"></script>
+    <script src="leaderboard.js"></script>
+
+    <script>
+        document.addEventListener("keydown", function (e) {
+            if (e.key.toLowerCase() === "[") {
+                window.open("https://pertandingan.github.io/Pertandingan/", "_blank");
+            }
+            if (e.key.toLowerCase() === "-") {
+                window.open("https://pertandingan.github.io/ZenthTranslate/", "_blank");
+            }
+        });
+    </script>
 </body>
 </html>
+
