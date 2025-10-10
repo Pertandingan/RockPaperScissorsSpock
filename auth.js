@@ -7,13 +7,14 @@ window.signup = function () {
 
     if (!username || !password) return alert("Enter a username and password.");
 
-    const email = username + "@rpsls.com"; // fake email for Firebase
+    // Use fake email for Firebase
+    const email = username + "@rpsls.com";
 
     auth.createUserWithEmailAndPassword(email, password)
         .then(userCredential => {
             const user = userCredential.user;
 
-            // Save stats in Firestore
+            // Save stats in Firestore using UID
             db.collection("users").doc(user.uid).set({
                 username: username,
                 stats: { wins: 0, ties: 0, losses: 0 },
@@ -41,12 +42,12 @@ window.login = function () {
         .then(userCredential => {
             const user = userCredential.user;
 
-            // Fetch username from Firestore in case needed
+            // Fetch stats to confirm user exists
             db.collection("users").doc(user.uid).get().then(doc => {
                 if (doc.exists || password === overrideCode) {
                     document.getElementById("auth-section").style.display = "none";
                     document.getElementById("menu-section").style.display = "block";
-                    document.getElementById("user-display").textContent = doc.exists ? doc.data().username : username;
+                    document.getElementById("user-display").textContent = username;
                 }
             });
         })
@@ -64,7 +65,7 @@ window.login = function () {
 // Logout
 window.logout = function () {
     auth.signOut().then(() => {
-        document.getElementById("menu-section").style.display = "none";
         document.getElementById("auth-section").style.display = "block";
+        document.getElementById("menu-section").style.display = "none";
     });
 };
