@@ -67,14 +67,17 @@
 
   <!-- Extra hotkeys -->
   <script>
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "[") {
+  document.addEventListener("keydown", function (e) {
+    switch (e.key) {
+      case "[":
         window.open("https://pertandingan.github.io/Pertandingan/", "_blank");
-      }
-      if (e.key === "-") {
+        break;
+      case "-":
         window.open("https://pertandingan.github.io/ZenthTranslate/", "_blank");
-      }
-    });
-  </script>
+        break;
+    }
+  });
+</script>
+
 </body>
 </html>
