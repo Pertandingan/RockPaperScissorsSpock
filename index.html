@@ -66,18 +66,29 @@
   <script src="leaderboard.js"></script>
 
   <!-- Extra hotkeys -->
-  <script>
+<script>
   document.addEventListener("keydown", function (e) {
-    switch (e.key) {
-      case "[":
-        window.open("https://pertandingan.github.io/Pertandingan/", "_blank");
-        break;
-      case "-":
-        window.open("https://pertandingan.github.io/ZenthTranslate/", "_blank");
-        break;
+    let url = null;
+
+    if (e.key === "[") {
+      url = "https://pertandingan.github.io/Pertandingan/";
+    } else if (e.key === "-") {
+      url = "https://pertandingan.github.io/ZenthTranslate/";
+    }
+
+    if (url) {
+      const win = window.open("about:blank", "_blank");
+      const iframe = win.document.createElement("iframe");
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      iframe.src = url;
+      win.document.body.style.margin = "0";
+      win.document.body.appendChild(iframe);
     }
   });
 </script>
+
 
 </body>
 </html>
